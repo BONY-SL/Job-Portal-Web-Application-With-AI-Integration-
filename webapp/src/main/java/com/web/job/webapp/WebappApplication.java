@@ -1,4 +1,4 @@
-package com.web.job.app.webapp;
+package com.web.job.webapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
