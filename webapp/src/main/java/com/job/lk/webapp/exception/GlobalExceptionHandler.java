@@ -1,9 +1,6 @@
 package com.job.lk.webapp.exception;
 
-import com.job.lk.webapp.exception.coustom.FileUploadError;
-import com.job.lk.webapp.exception.coustom.PasswordUnMatchedError;
-import com.job.lk.webapp.exception.coustom.UserAlreadyExist;
-import com.job.lk.webapp.exception.coustom.UserNotFoundError;
+import com.job.lk.webapp.exception.coustom.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +40,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String,Object>> handlePasswordUnMatched(PasswordUnMatchedError passwordUnMatchedError, HttpServletRequest httpServletRequest){
 
         return buildErrorResponse(passwordUnMatchedError.getMessage(), HttpStatus.BAD_REQUEST, httpServletRequest.getRequestURI());
+
+    }
+
+    @ExceptionHandler(ResourceNotFound.class)
+    public ResponseEntity<Map<String,Object>> handleResourceNotFound(ResourceNotFound resourceNotFound, HttpServletRequest httpServletRequest){
+
+        return buildErrorResponse(resourceNotFound.getMessage(), HttpStatus.NOT_FOUND, httpServletRequest.getRequestURI());
 
     }
 
