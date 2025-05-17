@@ -13,6 +13,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
+
     private static final String SECRET_KEY = "O7e6iz3AmDnF3JOV3MKXOsrUZqQqvs+r9E17C6ZMUgCWPYtGw7n8un0RinzTzC5a";  // Replace with a strong secret key
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
 
