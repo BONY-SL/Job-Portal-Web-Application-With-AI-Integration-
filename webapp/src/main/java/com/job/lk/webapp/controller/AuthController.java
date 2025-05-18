@@ -4,6 +4,7 @@ import com.job.lk.webapp.dto.*;
 import com.job.lk.webapp.service.ImageUploadService;
 import com.job.lk.webapp.service.UserService;
 import com.job.lk.webapp.util.JsonResponse;
+import com.job.lk.webapp.util.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +71,7 @@ public class AuthController {
         return new ResponseEntity<>(new JsonResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.name(),
-                "Success",
+                Message.SUCCESS.name(),
                 userService.updateUser(id,userDTO)), HttpStatus.OK);
     }
 }

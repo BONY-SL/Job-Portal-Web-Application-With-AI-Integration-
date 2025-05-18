@@ -10,10 +10,8 @@ import com.job.lk.webapp.repository.UserRepository;
 import com.job.lk.webapp.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +25,7 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.findAll()
                 .stream()
                 .map(this::convertEntityToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -58,7 +56,7 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.findByUserId(userId)
                 .stream()
                 .map(this::convertEntityToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

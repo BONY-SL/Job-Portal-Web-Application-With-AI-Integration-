@@ -3,6 +3,7 @@ package com.job.lk.webapp.controller;
 import com.job.lk.webapp.dto.CompanyDTO;
 import com.job.lk.webapp.service.CompanyService;
 import com.job.lk.webapp.util.JsonResponse;
+import com.job.lk.webapp.util.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class CompanyController {
         return new ResponseEntity<>(new JsonResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.name(),
-                "Success",
+                Message.SUCCESS.name(),
                 companyService.getAllCompanies()
         ), HttpStatus.OK);
     }
@@ -40,7 +41,7 @@ public class CompanyController {
         return new ResponseEntity<>(new JsonResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.name(),
-                "Success",
+                Message.SUCCESS.name(),
                 companyService.getCompanyById(id)
         ),HttpStatus.OK);
     }
@@ -51,7 +52,7 @@ public class CompanyController {
         return new ResponseEntity<>(new JsonResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.name(),
-                "Success",
+                Message.SUCCESS.name(),
                 companyService.getCompaniesByUserId(userId)
         ),HttpStatus.OK);
     }
