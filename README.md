@@ -67,7 +67,7 @@ This Job Portal Web Application aims to connect job seekers and employers throug
 - **Frontend**: React
 - **Backend**: Spring Boot, Spring Security, Hibernate/JPA
 - **Database**: MySQL
-- **AI Tools**: IBM Watson, Botpress
+- **AI Tools**: Open AI API, google Chat Bot
 - **Cloud**: AWS EC2, AWS RDS
 - **Web Server**: Nginx
 
