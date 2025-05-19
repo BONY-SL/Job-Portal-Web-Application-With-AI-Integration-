@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CompanyDTO {
-
-    private Long id;
+public class EnrollmentDTO {
+    private Long enrollmentId;
+    private Long courseId;
     private Long userId;
-    private String name;
-    private String location;
+    private LocalDate enrollmentDate;
+    private Integer progressStatus;
 }

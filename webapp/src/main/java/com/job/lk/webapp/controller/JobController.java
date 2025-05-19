@@ -1,9 +1,12 @@
 package com.job.lk.webapp.controller;
 
 import com.job.lk.webapp.dto.JobDTO;
+import com.job.lk.webapp.dto.ResumeUrlDTO;
+import com.job.lk.webapp.exception.coustom.JobMatchingException;
 import com.job.lk.webapp.exception.coustom.ResourceNotFound;
 import com.job.lk.webapp.service.JobMatchingService;
 import com.job.lk.webapp.service.JobService;
+import com.job.lk.webapp.service.impl.ResumeParserService;
 import com.job.lk.webapp.util.JsonResponse;
 import com.job.lk.webapp.util.Message;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +25,7 @@ public class JobController {
 
     private final JobService jobService;
     private final JobMatchingService jobMatchingService;
-
+    private final ResumeParserService resumeParserService;
     //Create Job
     @PostMapping("/create")
     public ResponseEntity<JsonResponse> createJob(@RequestBody JobDTO jobDTO){
@@ -91,4 +94,27 @@ public class JobController {
             throw new ResourceNotFound(e.getMessage());
         }
     }
+
+    @PostMapping("/match-jobs")
+    public ResponseEntity<JsonResponse> matchJobs(@RequestBody ResumeUrlDTO resumeUrlDTO){
+        System.out.println(resumeUrlDTO.getResumeUrl());
+
+        try{
+            String parsedText = resumeParserService.parseResume(resumeUrlDTO);
+            System.out.println("parse text: "+parsedText);
+            List<JobDTO> matchingJob = jobMatchingService.findMatchingJobs(parsedText);
+
+            return new ResponseEntity<>(new JsonResponse(
+                    HttpStatus.OK.value(),
+                    HttpStatus.OK.name(),
+                    Message.SUCCESS.name(),
+                    matchingJob
+            ),HttpStatus.OK);
+
+        }catch (Exception e){
+            throw new JobMatchingException(e.getMessage());
+        }
+    }
+
+
 }

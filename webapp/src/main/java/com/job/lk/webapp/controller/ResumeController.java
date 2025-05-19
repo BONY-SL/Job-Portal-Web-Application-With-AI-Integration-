@@ -1,7 +1,6 @@
 package com.job.lk.webapp.controller;
 
 import com.job.lk.webapp.dto.ResumeDTO;
-import com.job.lk.webapp.exception.coustom.ResourceNotFound;
 import com.job.lk.webapp.service.FileUploadService;
 import com.job.lk.webapp.service.ResumeService;
 import com.job.lk.webapp.util.JsonResponse;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/resumes")
