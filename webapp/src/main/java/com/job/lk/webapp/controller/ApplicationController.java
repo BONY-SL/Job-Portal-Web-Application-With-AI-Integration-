@@ -2,6 +2,8 @@ package com.job.lk.webapp.controller;
 
 import com.job.lk.webapp.dto.ApplicationDTO;
 import com.job.lk.webapp.service.ApplicationService;
+import com.job.lk.webapp.util.JsonResponse;
+import com.job.lk.webapp.util.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,55 +20,89 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @PostMapping("/upload")
-    public ResponseEntity<ApplicationDTO> uploadApplication(@RequestBody ApplicationDTO applicationDTO) throws IOException {
+    public ResponseEntity<JsonResponse> uploadApplication(@RequestBody ApplicationDTO applicationDTO) throws IOException {
         ApplicationDTO savedApplication = applicationService.createApplication(applicationDTO);
-        return new ResponseEntity<>(savedApplication, HttpStatus.CREATED);
+        return new ResponseEntity<>(new JsonResponse(
+                HttpStatus.CREATED.value(),
+                HttpStatus.CREATED.name(),
+                "Job Application Saved Success",
+                savedApplication
+        ), HttpStatus.CREATED);
     }
 
     // Update application
     @PutMapping("/{applicationId}")
-    public ResponseEntity<ApplicationDTO> updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationDTO applicationDTO) {
+    public ResponseEntity<JsonResponse> updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationDTO applicationDTO) {
         ApplicationDTO updatedApplication = applicationService.updateApplication(applicationId, applicationDTO);
         return updatedApplication != null
-                ? new ResponseEntity<>(updatedApplication, HttpStatus.OK)
+                ? new ResponseEntity<>(new JsonResponse(
+                        HttpStatus.OK.value(),
+                HttpStatus.OK.name(),
+                Message.SUCCESS.name(),
+                updatedApplication
+        ), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Delete application
     @DeleteMapping("/{applicationId}")
-    public ResponseEntity<Void> deleteApplication(@PathVariable Long applicationId) {
+    public ResponseEntity<JsonResponse> deleteApplication(@PathVariable Long applicationId) {
         boolean isDeleted = applicationService.deleteApplication(applicationId);
-        return isDeleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return isDeleted ? new ResponseEntity<>(new JsonResponse(
+                HttpStatus.NO_CONTENT.value(),
+                HttpStatus.NO_CONTENT.name(),
+                Message.SUCCESS.name(),
+                true
+                ),HttpStatus.NO_CONTENT) : new ResponseEntity<>(new JsonResponse(null),HttpStatus.NOT_FOUND);
     }
 
     // Get all applications
     @GetMapping
-    public ResponseEntity<List<ApplicationDTO>> getAllApplications() {
+    public ResponseEntity<JsonResponse> getAllApplications() {
         List<ApplicationDTO> applications = applicationService.getAllApplications();
-        return new ResponseEntity<>(applications, HttpStatus.OK);
+        return new ResponseEntity<>(new JsonResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.name(),
+                Message.SUCCESS.name(),
+                applications
+        ), HttpStatus.OK);
     }
 
     // Get application by ID
     @GetMapping("/{applicationId}")
-    public ResponseEntity<ApplicationDTO> getApplicationById(@PathVariable Long applicationId) {
+    public ResponseEntity<JsonResponse> getApplicationById(@PathVariable Long applicationId) {
         ApplicationDTO applicationDTO = applicationService.getApplicationById(applicationId);
         return applicationDTO != null
-                ? new ResponseEntity<>(applicationDTO, HttpStatus.OK)
+                ? new ResponseEntity<>(new JsonResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.name(),
+                Message.SUCCESS.name(),
+                applicationDTO), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Get all applications for a specific user
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ApplicationDTO>> getApplicationsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<JsonResponse> getApplicationsByUserId(@PathVariable Long userId) {
         List<ApplicationDTO> applications = applicationService.getApplicationsByUserId(userId);
-        return new ResponseEntity<>(applications, HttpStatus.OK);
+        return new ResponseEntity<>(new JsonResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.name(),
+                Message.SUCCESS.name(),
+                applications
+        ), HttpStatus.OK);
     }
 
     // Get all applications for a specific job
     @GetMapping("/job/{jobId}")
-    public ResponseEntity<List<ApplicationDTO>> getApplicationsByJobId(@PathVariable Long jobId) {
+    public ResponseEntity<JsonResponse> getApplicationsByJobId(@PathVariable Long jobId) {
         List<ApplicationDTO> applications = applicationService.getApplicationsByJobId(jobId);
-        return new ResponseEntity<>(applications, HttpStatus.OK);
+        return new ResponseEntity<>(new JsonResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.name(),
+                Message.SUCCESS.name(),
+                applications
+        ), HttpStatus.OK);
     }
 
 

@@ -27,11 +27,11 @@ public class LessonController {
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<JsonResponse> createLesson(@RequestPart("title") String title,
-                                                  @RequestPart("content") String content,
-                                                  @RequestPart("moduleId") Long moduleId,
-                                                  @RequestPart("video") MultipartFile video,
-                                                  @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<JsonResponse> createLesson(@RequestParam("title") String title,
+                                                  @RequestParam("content") String content,
+                                                  @RequestParam("moduleId") Long moduleId,
+                                                  @RequestParam("video") MultipartFile video,
+                                                  @RequestParam("file") MultipartFile file) throws IOException {
         String videoUrl = videoUploadService.uploadFile(video);
         String fileUrl = fileUploadService.uploadFile(file);
 
@@ -73,11 +73,11 @@ public class LessonController {
 
     @PutMapping(value = "/{lessonId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<JsonResponse> updateLesson(@PathVariable Long lessonId,
-                                                  @RequestPart("title") String title,
-                                                  @RequestPart("content") String content,
-                                                  @RequestPart("moduleId") Long moduleId,
-                                                  @RequestPart(value = "video", required = false) MultipartFile video,
-                                                  @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+                                                  @RequestParam("title") String title,
+                                                  @RequestParam("content") String content,
+                                                  @RequestParam("moduleId") Long moduleId,
+                                                  @RequestParam(value = "video", required = false) MultipartFile video,
+                                                  @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
 
         String videoUrl = video != null ? videoUploadService.uploadFile(video) : null;
         String fileUrl = file != null ? fileUploadService.uploadFile(file) : null;

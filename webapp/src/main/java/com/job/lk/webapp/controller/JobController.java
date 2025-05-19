@@ -38,12 +38,12 @@ public class JobController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<JsonResponse> getAllCompanies(){
+    public ResponseEntity<JsonResponse> getAllJobs(){
         return new ResponseEntity<>(new JsonResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.name(),
                 Message.SUCCESS.name(),
-                jobService.getAllCompanies()
+                jobService.getAllJobs()
         ),HttpStatus.OK);
     }
 

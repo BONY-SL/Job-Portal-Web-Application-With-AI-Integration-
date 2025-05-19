@@ -2,13 +2,17 @@ package com.job.lk.webapp.service.impl;
 
 import com.job.lk.webapp.dto.ApplicationDTO;
 import com.job.lk.webapp.entity.Application;
+import com.job.lk.webapp.entity.Job;
+import com.job.lk.webapp.entity.User;
+import com.job.lk.webapp.exception.coustom.ResourceNotFound;
 import com.job.lk.webapp.repository.ApplicationRepository;
+import com.job.lk.webapp.repository.JobRepository;
+import com.job.lk.webapp.repository.UserRepository;
 import com.job.lk.webapp.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -16,44 +20,38 @@ import java.util.List;
 public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
+    private final ModelMapper modelMapper;
+    private final JobRepository jobRepository;
+    private final UserRepository userRepository;
 
 
     @Override
     public ApplicationDTO createApplication(ApplicationDTO applicationDTO) {
-        Application application = new Application();
-        application.setJobId(applicationDTO.getJobId());
-        application.setApplicantId(applicationDTO.getApplicantId());
-        application.setResumeUrl(applicationDTO.getResumeUrl());
-        application.setApplicationStatus(applicationDTO.getApplicationStatus());
-        application.setAppliedDate(LocalDate.now()); // Set current date
+
+        var application = Application.builder().jobId(applicationDTO.getJobId()).applicantId(applicationDTO.getApplicantId())
+                .resumeUrl(applicationDTO.getResumeUrl()).applicationStatus(applicationDTO.getApplicationStatus()).appliedDate(LocalDate.now()) // Set the current date
+                .build();
+
         Application savedApplication = applicationRepository.save(application);
 
-        // Return the saved application data as DTO
-        applicationDTO.setApplicationId(savedApplication.getApplicationId());
-        applicationDTO.setAppliedDate(savedApplication.getAppliedDate());
-        return applicationDTO;
+        return modelMapper.map(savedApplication, ApplicationDTO.class);
     }
 
     @Override
     public ApplicationDTO updateApplication(Long applicationId, ApplicationDTO applicationDTO) {
         // Find the application to update
-        Application existingApplication = applicationRepository.findById(applicationId).orElse(null);
-        if (existingApplication != null) {
-            if(applicationDTO.getJobId() != null ) {
-                existingApplication.setJobId(applicationDTO.getJobId());
-                existingApplication.setApplicantId(applicationDTO.getApplicantId());
-                existingApplication.setResumeUrl(applicationDTO.getResumeUrl());
-                existingApplication.setApplicationStatus(applicationDTO.getApplicationStatus());
-                existingApplication.setAppliedDate(applicationDTO.getAppliedDate());
-            }
-            existingApplication.setApplicationStatus(applicationDTO.getApplicationStatus());
+        Application existingApplication = applicationRepository.findById(applicationId).orElseThrow(()->
+                new ResourceNotFound("Application Not Found...."));
+        Job job = jobRepository.findById(applicationDTO.getJobId()).orElseThrow(()->
+                new ResourceNotFound("Job Not Found...."));
 
-            applicationRepository.save(existingApplication);
-            // Return the updated application data as DTO
-            applicationDTO.setApplicationId(existingApplication.getApplicationId());
-            return applicationDTO;
-        }
-        return null; // Return null if not found
+        existingApplication = existingApplication.toBuilder()
+                .jobId(job.getId()).applicantId(applicationDTO.getApplicantId())
+                .resumeUrl(applicationDTO.getResumeUrl()).applicationStatus(applicationDTO.getApplicationStatus())
+                .appliedDate(applicationDTO.getAppliedDate())
+                .build();
+        Application updatedApplication = applicationRepository.save(existingApplication);
+        return modelMapper.map(updatedApplication, ApplicationDTO.class);
     }
 
     @Override
@@ -68,71 +66,43 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<ApplicationDTO> getAllApplications() {
-        List<Application> applications = applicationRepository.findAll();
-        List<ApplicationDTO> applicationDTOs = new ArrayList<>();
-        for (Application application : applications) {
-            ApplicationDTO applicationDTO = new ApplicationDTO(
-                    application.getApplicationId(),
-                    application.getJobId(),
-                    application.getApplicantId(),
-                    application.getResumeUrl(),
-                    application.getApplicationStatus(),
-                    application.getAppliedDate()
-            );
-            applicationDTOs.add(applicationDTO);
-        }
-        return applicationDTOs;
+
+        return applicationRepository.findAll()
+                .stream()
+                .map(application -> modelMapper.map(application, ApplicationDTO.class))
+                .toList();
     }
 
     @Override
     public ApplicationDTO getApplicationById(Long applicationId) {
-        Application application = applicationRepository.findById(applicationId).orElse(null);
-        if (application != null) {
-            return new ApplicationDTO(
-                    application.getApplicationId(),
-                    application.getJobId(),
-                    application.getApplicantId(),
-                    application.getResumeUrl(),
-                    application.getApplicationStatus(),
-                    application.getAppliedDate()
-            );
-        }
-        return null; // Return null if not found
+        Application application = applicationRepository.findById(applicationId).orElseThrow(
+                ()-> new ResourceNotFound("Not Application With Id : "+applicationId)
+        );
+        return modelMapper.map(application, ApplicationDTO.class);
     }
 
     @Override
     public List<ApplicationDTO> getApplicationsByUserId(Long userId) {
-        List<Application> applications = applicationRepository.findByApplicantId(userId);
-        List<ApplicationDTO> applicationDTOs = new ArrayList<>();
-        for (Application application : applications) {
-            ApplicationDTO applicationDTO = new ApplicationDTO(
-                    application.getApplicationId(),
-                    application.getJobId(),
-                    application.getApplicantId(),
-                    application.getResumeUrl(),
-                    application.getApplicationStatus(),
-                    application.getAppliedDate()
-            );
-            applicationDTOs.add(applicationDTO);
-        }
-        return applicationDTOs;
+        User user = userRepository.findById(userId).orElseThrow(
+                ()-> new ResourceNotFound("Not User With Id : "+userId)
+        );
+
+        return applicationRepository.findByApplicantId(user.getId())
+                .stream()
+                .map(application -> modelMapper.map(application, ApplicationDTO.class))
+                .toList();
     }
 
     @Override
     public List<ApplicationDTO> getApplicationsByJobId(Long jobId) {
-        List<Application> applications = applicationRepository.findByJobId(jobId);
-        List<ApplicationDTO> applicationDTOs = new ArrayList<>();
-        for (Application application : applications) {
-            ApplicationDTO applicationDTO = new ApplicationDTO(
-                    application.getApplicationId(),
-                    application.getJobId(),
-                    application.getApplicantId(),
-                    application.getResumeUrl(),
-                    application.getApplicationStatus(),
-                    application.getAppliedDate()
-            );
-            applicationDTOs.add(applicationDTO);
-        }
-        return applicationDTOs;
+
+        Job job = jobRepository.findById(jobId).orElseThrow(()->
+                new ResourceNotFound("Job Not Found...."));
+
+        return applicationRepository.findByJobId(job.getId())
+                .stream()
+                .map(application -> modelMapper.map(application, ApplicationDTO.class))
+                .toList();
+
     }
 }

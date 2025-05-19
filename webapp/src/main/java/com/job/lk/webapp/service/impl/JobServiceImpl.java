@@ -33,7 +33,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobDTO> getAllCompanies() {
+    public List<JobDTO> getAllJobs() {
         List<Job> jobList = jobRepository.findAll();
         return jobList.stream()
                 .map(this::jobConvertToDto).toList();

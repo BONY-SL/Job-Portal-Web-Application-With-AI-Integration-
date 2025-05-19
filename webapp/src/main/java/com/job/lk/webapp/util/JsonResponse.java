@@ -12,4 +12,8 @@ public class JsonResponse {
     private String status;
     private String message;
     private Object data;
+
+    public JsonResponse(Object data) {
+        this.data = data;
+    }
 }

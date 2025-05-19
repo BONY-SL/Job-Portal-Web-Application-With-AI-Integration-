@@ -14,7 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -71,6 +73,13 @@ public class ResumeServiceImpl implements ResumeService {
         // Update the existing Resume
         Resume updatedResume = resumeRepository.save(resume);
         return modelMapper.map(updatedResume, ResumeDTO.class);
+    }
+
+    @Override
+    public List<ResumeDTO> getResumesByUserId(Long userId) {
+        return resumeRepository.findByUserId(userId).stream()
+                .map(resume -> new ResumeDTO(resume.getId(), resume.getUserId(), resume.getResumeUrl()))
+                .collect(Collectors.toList());
     }
 
 }

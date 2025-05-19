@@ -2,9 +2,11 @@ package com.job.lk.webapp.service.impl;
 
 import com.job.lk.webapp.dto.EnrollmentDTO;
 import com.job.lk.webapp.entity.Enrollment;
+import com.job.lk.webapp.exception.coustom.ResourceNotFound;
 import com.job.lk.webapp.repository.EnrollmentRepository;
 import com.job.lk.webapp.service.EnrollmentService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,26 +19,23 @@ import java.util.stream.Collectors;
 public class EnrollmentServiceImpl implements EnrollmentService {
 
     private final EnrollmentRepository enrollmentRepository;
+    private final ModelMapper modelMapper;
 
 
     // Create Enrollment
     public EnrollmentDTO enrollCourse(EnrollmentDTO enrollmentDTO) {
-        Enrollment enrollment = new Enrollment();
-        enrollment.setCourseId(enrollmentDTO.getCourseId());
-        enrollment.setUserId(enrollmentDTO.getUserId());
-        enrollment.setEnrollmentDate(enrollmentDTO.getEnrollmentDate());
-        enrollment.setProgressStatus(enrollmentDTO.getProgressStatus());
-
+        var enrollment = Enrollment.builder()
+                .courseId(enrollmentDTO.getCourseId()).userId(enrollmentDTO.getUserId())
+                .enrollmentDate(enrollmentDTO.getEnrollmentDate()).progressStatus(enrollmentDTO.getProgressStatus())
+                .build();
         Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
-
-        // Convert saved entity to DTO
-        return mapToDTO(savedEnrollment);
+        return modelMapper.map(savedEnrollment, EnrollmentDTO.class);
     }
 
     // Get Enrollment by ID
     public Optional<EnrollmentDTO> getEnrollmentById(Long enrollmentId) {
         Optional<Enrollment> enrollmentOptional = enrollmentRepository.findByEnrollmentId(enrollmentId);
-        return enrollmentOptional.map(this::mapToDTO);
+        return Optional.ofNullable(modelMapper.map(enrollmentOptional, EnrollmentDTO.class));
     }
 
     // Update Enrollment Progress
@@ -46,7 +45,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             Enrollment enrollment = enrollmentOptional.get();
             enrollment.setProgressStatus(progressStatus);
             Enrollment updatedEnrollment = enrollmentRepository.save(enrollment);
-            return Optional.of(mapToDTO(updatedEnrollment));
+            return Optional.ofNullable(modelMapper.map(updatedEnrollment, EnrollmentDTO.class));
         }
         return Optional.empty();
     }
@@ -55,7 +54,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public List<EnrollmentDTO> getEnrollmentsByUserId(Long userId) {
         return enrollmentRepository.findAll().stream()
                 .filter(e -> e.getUserId().equals(userId))
-                .map(this::mapToDTO)
+                .map(enrollment -> modelMapper.map(enrollment, EnrollmentDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -66,9 +65,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             enrollmentRepository.delete(enrollment.get());
             return true;
         }
-        return false;
+        throw new ResourceNotFound("Enrolment Not Found....");
     }
-
 
     public List<Long> getUserIdsByCourseId(Long courseId) {
         List<Enrollment> enrollments = enrollmentRepository.findByCourseId(courseId);
@@ -80,23 +78,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         return userIds;
     }
-
-
-
-    // Helper method to convert Enrollment entity to EnrollmentDTO
-    private EnrollmentDTO mapToDTO(Enrollment enrollment) {
-        EnrollmentDTO dto = new EnrollmentDTO();
-        dto.setEnrollmentId(enrollment.getEnrollmentId());
-        dto.setCourseId(enrollment.getCourseId());
-        dto.setUserId(enrollment.getUserId());
-        dto.setEnrollmentDate(enrollment.getEnrollmentDate());
-        dto.setProgressStatus(enrollment.getProgressStatus());
-        return dto;
-    }
-
-
     public Optional<EnrollmentDTO> getEnrollmentByUserIdAndCourseId(Long userId, Long courseId) {
         Optional<Enrollment> enrollmentOptional = enrollmentRepository.findByUserIdAndCourseId(userId, courseId);
-        return enrollmentOptional.map(this::mapToDTO);
+        return Optional.ofNullable(modelMapper.map(enrollmentOptional, EnrollmentDTO.class));
     }
 }

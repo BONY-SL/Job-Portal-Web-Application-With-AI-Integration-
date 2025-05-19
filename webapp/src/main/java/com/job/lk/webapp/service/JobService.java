@@ -7,7 +7,7 @@ import java.util.List;
 public interface JobService {
     JobDTO createJob(JobDTO jobDTO);
 
-    List<JobDTO> getAllCompanies();
+    List<JobDTO> getAllJobs();
 
     JobDTO updateJob(Long id, JobDTO jobDTO);
 

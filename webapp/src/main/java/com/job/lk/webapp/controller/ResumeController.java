@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/resumes")
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class ResumeController {
 
     @PostMapping
     public ResponseEntity<JsonResponse> uploadResume(@RequestPart(value = "file")MultipartFile file,
-                                                     @RequestParam(value = "userId") Long userId){
+                                                     @RequestPart(value = "userId") Long userId){
 
         String fileUrl = fileUploadService.uploadFile(file);
 
@@ -60,7 +62,7 @@ public class ResumeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> updateResume(@PathVariable(value = "id") Long id,
-                                                     @RequestPart (value = "file", required = false) MultipartFile file,
+                                                     @RequestParam (value = "file", required = false) MultipartFile file,
                                                      @RequestParam (value = "resumeUrl",required = false) String resumeUrl){
 
         ResumeDTO updatedResume = resumeService.updateResume(id, file, resumeUrl);
@@ -71,6 +73,11 @@ public class ResumeController {
                 updatedResume
         );
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<ResumeDTO>>getResumesByUser(@PathVariable Long id) {
+        return ResponseEntity.ok(resumeService.getResumesByUserId(id));
     }
 
 }
