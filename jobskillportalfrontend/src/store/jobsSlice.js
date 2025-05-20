@@ -27,7 +27,7 @@ export const fetchJobSuggestions = createAsyncThunk(
       );
       return response.data.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data.data || error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );

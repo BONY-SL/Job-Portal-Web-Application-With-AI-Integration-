@@ -104,9 +104,13 @@ const JobPage = () => {
               label="Location"
             >
               <MenuItem value="">All Locations</MenuItem>
-              <MenuItem value="New York">New York</MenuItem>
-              <MenuItem value="San Francisco">San Francisco</MenuItem>
-              <MenuItem value="Los Angeles">Los Angeles</MenuItem>
+              <MenuItem value="Colombo">Colombo</MenuItem>
+              <MenuItem value="Baththaramulla">Baththaramulla</MenuItem>
+              <MenuItem value="Moratuwa">Moratuwa</MenuItem>
+              <MenuItem value="Kaluthara">Kaluthara</MenuItem>
+              <MenuItem value="Galle">Galle</MenuItem>
+              <MenuItem value="Matara">Matara</MenuItem>
+              <MenuItem value="Kurunegala">Kurunegala</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -119,9 +123,13 @@ const JobPage = () => {
               label="Industry"
             >
               <MenuItem value="">All Industries</MenuItem>
-              <MenuItem value="IT">IT</MenuItem>
+              <MenuItem value="Software Engineer">Software Engineer</MenuItem>
               <MenuItem value="Healthcare">Healthcare</MenuItem>
-              <MenuItem value="Finance">Finance</MenuItem>
+              <MenuItem value="Software Network">Software Network</MenuItem>
+              <MenuItem value="DevOps Engineer">DevOps Engineer</MenuItem>
+              <MenuItem value="Human Resource">Human Resource</MenuItem>
+              <MenuItem value="Low">Low</MenuItem>
+              <MenuItem value="Software QA">Software QA</MenuItem>
             </Select>
           </FormControl>
         </Grid>

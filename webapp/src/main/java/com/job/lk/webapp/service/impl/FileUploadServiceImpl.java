@@ -31,22 +31,24 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     @Override
     public String uploadFile(MultipartFile file) {
-        // Uploading image to Cloudinary
-        Map<?,?> uploadResult = null;
+        Map<?, ?> uploadResult;
         try {
-             uploadResult = cloudinary.uploader().upload(
+            uploadResult = cloudinary.uploader().upload(
                     file.getBytes(),
                     ObjectUtils.asMap(
-                            "resource_type", "raw",  // Ensure it's treated as a raw file
-                            "public_id", "pdf_files/" + file.getOriginalFilename(), // Organize PDFs in a folder
-                            "fl", "attachment:false" // Prevent forced download
+                            "resource_type", "raw",
+                            "public_id", "pdf_files/" + file.getOriginalFilename(),
+                            "type", "upload",
+                            "access_mode", "public",
+                            "fl", "attachment:false"
                     )
+
             );
         } catch (IOException e) {
             throw new FileUploadError("Error Upload File");
         }
 
-        // Return the URL of the uploaded image
-        return uploadResult.get("secure_url").toString(); // Return secure URL
+        return uploadResult.get("secure_url").toString(); // Return public URL
     }
+
 }

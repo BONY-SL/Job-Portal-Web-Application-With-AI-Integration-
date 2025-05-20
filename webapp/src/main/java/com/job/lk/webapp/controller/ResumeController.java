@@ -7,6 +7,7 @@ import com.job.lk.webapp.util.JsonResponse;
 import com.job.lk.webapp.util.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,10 +23,12 @@ public class ResumeController {
 
     private final FileUploadService fileUploadService;
 
-    @PostMapping
-    public ResponseEntity<JsonResponse> uploadResume(@RequestPart(value = "file")MultipartFile file,
-                                                     @RequestPart(value = "userId") Long userId){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<JsonResponse> uploadResume(@RequestParam(value = "file") MultipartFile file,
+                                                     @RequestParam(value = "userId") Long userId){
 
+        System.out.println(file.getSize());
+        System.out.println(userId);
         String fileUrl = fileUploadService.uploadFile(file);
 
         var resumeDto = ResumeDTO.builder()
