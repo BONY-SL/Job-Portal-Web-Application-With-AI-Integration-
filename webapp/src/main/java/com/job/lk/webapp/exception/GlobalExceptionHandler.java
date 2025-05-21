@@ -57,6 +57,13 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(DialogFlowError.class)
+    public ResponseEntity<Map<String,Object>> handleDialogFlowErrorException(DialogFlowError dialogFlowError, HttpServletRequest httpServletRequest){
+
+        return buildErrorResponse(dialogFlowError.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, httpServletRequest.getRequestURI());
+
+    }
+
     private ResponseEntity<Map<String, Object>> buildErrorResponse(String message, HttpStatus status, String path) {
 
         Map<String, Object> errorResponse = new HashMap<>();
