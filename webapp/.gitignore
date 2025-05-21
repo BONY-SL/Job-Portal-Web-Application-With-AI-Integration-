@@ -19,7 +19,7 @@ target/
 *.iml
 *.ipr
 src/main/resources/application.properties
-
+src/main/resources/job-chat-cdbj-57372e6cd8f3.json
 
 ### NetBeans ###
 /nbproject/private/
