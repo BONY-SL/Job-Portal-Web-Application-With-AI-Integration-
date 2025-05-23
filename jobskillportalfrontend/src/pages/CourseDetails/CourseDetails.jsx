@@ -4,6 +4,7 @@ import { Box, Typography, Button, Card, Grid, List, ListItem, ListItemText, Divi
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import instance from "../../service/AxiosOrder";
 
 const CourseDetails = () => {
   const location = useLocation();
@@ -25,7 +26,7 @@ const CourseDetails = () => {
 
       try {
         // Fetch all modules
-        const moduleRes = await axios.get(`http://localhost:8080/api/modules/by-course/${course.id}`);
+        const moduleRes = await instance.get(`/modules/by-course/${course.id}`);
         const modulesData = moduleRes.data.data;
         setModules(modulesData);
 
@@ -37,7 +38,7 @@ const CourseDetails = () => {
         await Promise.all(
           modulesData.map(async (module) => {
             try {
-              const lessonRes = await axios.get(`http://localhost:8080/api/lessons/by-module/${module.id}`);
+              const lessonRes = await instance.get(`/lessons/by-module/${module.id}`);
               lessonsMap[module.id] = lessonRes.data.data;
 
               // Count completed lessons
@@ -67,7 +68,7 @@ const CourseDetails = () => {
       if (!user?.id || !course?.id) return;
 
       try {
-        const response = await axios.get(`http://localhost:8080/api/enroll/check?userId=${user.id}&courseId=${course.id}`);
+        const response = await instance.get(`/enroll/check?userId=${user.id}&courseId=${course.id}`);
         if (response.data.data?.userId === user.id && response.data.data?.courseId === course.id) {
           setIsEnrolled(true);
         }
@@ -105,7 +106,7 @@ const CourseDetails = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/api/enroll', {
+      const response = await instance.post('/enroll', {
         courseId: course.id,
         userId: user.id,
         progressStatus: 0,
@@ -137,7 +138,7 @@ const CourseDetails = () => {
 
     // Update the lesson completion status on the server
     try {
-      await axios.patch(`http://localhost:8080/api/lessons/${lessonId}/completion?isCompleted=${newStatus}`);
+      await instance.patch(`/lessons/${lessonId}/completion?isCompleted=${newStatus}`);
     } catch (err) {
       console.error(`Failed to update completion status for lesson ${lessonId}`, err);
       alert('Error updating lesson status');

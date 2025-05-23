@@ -40,11 +40,11 @@ const Register = () => {
           gotoLogin();
         } else {
           alert("Registration failed");
+          alert(response.data.message);
         }
       })
       .catch((error) => {
-        console.error("Registration error:", error);
-        alert("Registration failed. Please try again.");
+        alert(error.response.data.message);
       });
   }
 

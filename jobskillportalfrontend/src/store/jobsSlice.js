@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import instance from "../service/AxiosOrder";
 // Fetch all jobs
 export const fetchJobs = createAsyncThunk('jobs/fetchJobs', async (_, { rejectWithValue }) => {
   try {
-    const response = await axios.get('http://localhost:8080/api/jobs/all', {
+    const response = await instance.get('/jobs/all', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('iap-final-token')}`,
       },
@@ -20,8 +20,8 @@ export const fetchJobSuggestions = createAsyncThunk(
   'jobs/fetchJobSuggestions',
   async (resumeUrl, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/jobs/match-jobs',
+      const response = await instance.post(
+        '/jobs/match-jobs',
         { resumeUrl },
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -31,13 +31,12 @@ export const fetchJobSuggestions = createAsyncThunk(
     }
   }
 );
-
 // Check if user has applied to a job
 export const checkApplication = createAsyncThunk(
   'jobs/checkApplication',
   async ({ jobId, userId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/applications');
+      const response = await instance.get('/applications');
       const applications = response.data.data;
       const hasApplied = applications.some(
         (app) => app.jobId === jobId && app.applicantId === userId
@@ -54,11 +53,7 @@ export const applyForJob = createAsyncThunk(
   'jobs/applyForJob',
   async (applicationData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/applications/upload',
-        applicationData,
-        { headers: { 'Content-Type': 'application/json' } }
-      );
+      const response = await instance.post('/applications/upload',applicationData);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

@@ -20,6 +20,7 @@ import {
 import { useAuth } from "./../../context/AuthContext";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import instance from "../../service/AxiosOrder";
 
 const ProfilePage = () => {
   const { user, resume, setUser, setResume } = useAuth();
@@ -70,8 +71,8 @@ const ProfilePage = () => {
       }
 
       // Make the API call to update user details (including profile picture)
-      const userUpdateResponse = await axios.put(
-        `http://localhost:8080/api/auth/user/${user.id}`,
+      const userUpdateResponse = await instance.put(
+        `/auth/user/${user.id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -94,8 +95,8 @@ const ProfilePage = () => {
         resumeFormData.append("userId", user.id);
         resumeFormData.append("file", selectedFile);
 
-        const resumeUploadResponse = await axios.post(
-          "http://localhost:8080/api/resumes",
+        const resumeUploadResponse = await instance.post(
+          "/resumes",
           resumeFormData,
           {
             headers: { "Content-Type": "multipart/form-data" },

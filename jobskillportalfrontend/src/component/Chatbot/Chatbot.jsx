@@ -24,7 +24,7 @@ import {
   Divider
 } from '@mui/material';
 import { Chat as ChatIcon, Send as SendIcon, Close as CloseIcon } from '@mui/icons-material';
-import axios from 'axios';
+import instance from "../../service/AxiosOrder";
 
 const Chatbot = ({ job }) => {
   const theme = useTheme();
@@ -58,7 +58,7 @@ const Chatbot = ({ job }) => {
       setIsLoading(true);
       setError(null);
 
-      const response = await axios.post('http://localhost:8080/api/dialogflow/query', {
+      const response = await instance.post('/dialogflow/query', {
         message: text,
         sessionId: `job-${job.id}-${Math.random().toString(36).substr(2, 9)}`,
         parameters: {

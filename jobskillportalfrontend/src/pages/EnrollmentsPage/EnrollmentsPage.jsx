@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import NavBar from '../../component/NavBar/Navbar';
+import instance from "../../service/AxiosOrder";
 
 const EnrollmentsPage = () => {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ const EnrollmentsPage = () => {
       if (!user?.id) return;
 
       try {
-        const res = await axios.get(`http://localhost:8080/api/enroll/user/${user.id}`);
+        const res = await instance.get(`/enroll/user/${user.id}`);
         const enrollmentsData = res.data.data;
         setEnrollments(enrollmentsData);
 
@@ -31,7 +32,7 @@ const EnrollmentsPage = () => {
         const courseMap = {};
         await Promise.all(
           enrollmentsData.map(async (enroll) => {
-            const courseRes = await axios.get(`http://localhost:8080/api/courses/${enroll.courseId}`);
+            const courseRes = await instance.get(`/courses/${enroll.courseId}`);
             courseMap[enroll.courseId] = courseRes.data.data;
           })
         );

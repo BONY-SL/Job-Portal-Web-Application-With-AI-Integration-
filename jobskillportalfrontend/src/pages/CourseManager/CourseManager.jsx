@@ -27,7 +27,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import { useAuth } from '../../context/AuthContext';
 import Navbar from "../../component/NavBar/Navbar";
-
+import instance from "../../service/AxiosOrder";
 // Add a counter to track renders
 let renderCount = 0;
 
@@ -109,7 +109,7 @@ const CourseOverview = () => {
       try {
         setLoading(true);
         setError(null);
-        const res = await axios.get(`http://localhost:8080/api/courses/published-by/${user.id}`);
+        const res = await instance.get(`/courses/published-by/${user.id}`);
         const fetchedCourses = res.data.data;
         setCourses(fetchedCourses);
 
@@ -119,8 +119,8 @@ const CourseOverview = () => {
         await Promise.all(
           fetchedCourses.map(async (course) => {
             try {
-              const moduleRes = await axios.get(
-                `http://localhost:8080/api/modules/by-course/${course.id}`
+              const moduleRes = await instance.get(
+                `/modules/by-course/${course.id}`
               );
               modulesMap[course.id] = moduleRes.data.data;
 
@@ -164,7 +164,7 @@ const CourseOverview = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:8080/api/courses", {
+      const res = await instance.post("/courses", {
         ...courseData,
         published: false,
         publishedBy: user.id,
@@ -181,7 +181,7 @@ const CourseOverview = () => {
 
   const handleCreateModule = async () => {
     try {
-      const res = await axios.post("http://localhost:8080/api/modules", moduleData);
+      const res = await instance.post("/modules", moduleData);
       setModulesByCourse((prev) => ({
         ...prev,
         [moduleData.courseId]: [...(prev[moduleData.courseId] || []), res.data.data],
@@ -209,7 +209,7 @@ const CourseOverview = () => {
         formData.append("file", lessonData.file);
       }
 
-      const res = await axios.post("http://localhost:8080/api/lessons", formData, {
+      const res = await instance.post("/lessons", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -229,8 +229,8 @@ const CourseOverview = () => {
 
   const handleUpdateCourse = async () => {
     try {
-      const res = await axios.put(
-        `http://localhost:8080/api/courses/${updateCourseData.id}`,
+      const res = await instance.put(
+        `/courses/${updateCourseData.id}`,
         updateCourseData
       );
       setCourses((prev) =>
@@ -248,8 +248,8 @@ const CourseOverview = () => {
 
   const handleUpdateModule = async () => {
     try {
-      const res = await axios.put(
-        `http://localhost:8080/api/modules/${updateModuleData.id}`,
+      const res = await instance.put(
+        `/modules/${updateModuleData.id}`,
         updateModuleData
       );
       setModulesByCourse((prev) => ({
@@ -280,8 +280,8 @@ const CourseOverview = () => {
         formData.append("file", updateLessonData.file);
       }
 
-      const res = await axios.put(
-        `http://localhost:8080/api/lessons/${updateLessonData.id}`,
+      const res = await instance.put(
+        `/lessons/${updateLessonData.id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -317,7 +317,7 @@ const CourseOverview = () => {
 
   const handleDeleteCourse = async (courseId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/courses/${courseId}`);
+      await instance.delete(`/courses/${courseId}`);
       setCourses((prev) => prev.filter((course) => course.id !== courseId));
       setModulesByCourse((prev) => {
         const newModules = { ...prev };
@@ -344,7 +344,7 @@ const CourseOverview = () => {
 
   const handleDeleteModule = async (moduleId, courseId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/modules/${moduleId}`);
+      await instance.delete(`/modules/${moduleId}`);
       setModulesByCourse((prev) => ({
         ...prev,
         [courseId]: (prev[courseId] || []).filter((module) => module.id !== moduleId),
@@ -363,7 +363,7 @@ const CourseOverview = () => {
 
   const handleDeleteLesson = async (lessonId, moduleId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/lessons/${lessonId}`);
+      await instance.delete(`/lessons/${lessonId}`);
       setLessonsByModule((prev) => ({
         ...prev,
         [moduleId]: (prev[moduleId] || []).filter((lesson) => lesson.id !== lessonId),
@@ -378,8 +378,8 @@ const CourseOverview = () => {
   const handleTogglePublish = async (course) => {
     try {
       console.log("Toggling publish for course:", course.id);
-      const res = await axios.patch(
-        `http://localhost:8080/api/courses/${course.id}/toggle`
+      const res = await instance.patch(
+        `/courses/${course.id}/toggle`
       );
       const updatedCourse = res.data.data;
       console.log("Updated course from backend:", updatedCourse);

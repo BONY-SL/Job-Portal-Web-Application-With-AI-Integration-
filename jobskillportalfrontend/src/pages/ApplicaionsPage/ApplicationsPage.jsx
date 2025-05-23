@@ -4,6 +4,7 @@ import { Button, CircularProgress, Select, MenuItem, FormControl, InputLabel, Ta
 import { CheckCircle, Cancel } from '@mui/icons-material';
 import Navbar from '../../component/NavBar/Navbar';
 import { useJobs } from '../../context/JobsProvider';
+import instance from "../../service/AxiosOrder";
 
 const ApplicationsPage = () => {
   const [jobId, setJobId] = useState('');
@@ -29,7 +30,7 @@ const ApplicationsPage = () => {
       if (!jobId) return;
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8080/api/applications/job/${jobId}`);
+        const response = await instance.get(`/applications/job/${jobId}`);
         setApplications(response.data.data);
       } catch (error) {
         console.error('Error fetching applications', error);
@@ -46,7 +47,7 @@ const ApplicationsPage = () => {
     console.log(`Application ID: ${applicationId}, Status: ${status}`);
     try {
       setLoading(true);
-      const response = await axios.put(`http://localhost:8080/api/applications/${applicationId}`, {
+      const response = await instance.put(`/applications/${applicationId}`, {
         applicationStatus: status,
       });
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Grid, TextField, Typography } from "@mui/material";
 import Navbar from "../../component/NavBar/Navbar";
 import CourseCard from "../../component/CourseCard/CourseCard";
-
+import instance from "../../service/AxiosOrder";
 const CoursesPage = () => {
   const [allCourses, setAllCourses] = useState([]);
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -12,7 +12,7 @@ const CoursesPage = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/courses");
+        const response = await instance.get("/courses");
         setAllCourses(response.data.data);
         setFilteredCourses(response.data.data);
       } catch (error) {

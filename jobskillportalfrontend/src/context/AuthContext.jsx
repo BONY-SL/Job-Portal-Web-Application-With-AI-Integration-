@@ -40,32 +40,39 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Login function
-  const login = async (email, password) => {
-    try {
-      const response = await instance.post("/auth/login", { email, password });
-      const token = response.data.token;
+const login = async (email, password) => {
+  try {
+    const response = await instance.post("/auth/login", { email, password });
+    const token = response.data.token;
 
-      // Store token in localStorage
-      localStorage.setItem("iap-final-token", token);
+    const decodedToken = jwtDecode(token);
+    const { id, role } = decodedToken;
+    console.log("Decoded Token:", decodedToken);
 
-      // Decode token
-      const decodedToken = jwtDecode(token);
-      const { role, id } = decodedToken;
 
-      // Store role
-      localStorage.setItem("iap-final-role", role);
-      setRole(role);
-      console.log("User role:", role);
-
-      // Fetch user details
-      await fetchUser(id);
-
-      return role; // Return role for navigation
-    } catch (error) {
-      console.error("Login failed:", error);
-      return false;
+    console.log("Login response:", response.data); // Debugging log
+    if (!id) {
+      throw new Error("User ID is undefined in the login response.");
     }
-  };
+
+    // Store token in localStorage
+    localStorage.setItem("iap-final-token", token);
+
+    // Store role
+    localStorage.setItem("iap-final-role", role);
+    setRole(role);
+    console.log("User role:", role);
+
+    // Fetch user details
+    await fetchUser(id);
+
+    return role; // Return role for navigation
+  } catch (error) {
+    console.error("Login failed:", error);
+    return false;
+  }
+};
+
 
   // Logout function
   const logout = () => {

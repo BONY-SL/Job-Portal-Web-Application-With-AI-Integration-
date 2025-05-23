@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Visibility, Delete } from "@mui/icons-material";
-
+import instance from "../../service/AxiosOrder";
 const steps = ["Job Details", "Requirements", "Publish"];
 
 const VacancyPage = () => {
@@ -51,8 +51,8 @@ const VacancyPage = () => {
 
   const fetchCompanies = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/companies/user/${user.id}`
+      const response = await instance.get(
+        `/companies/user/${user.id}`
       );
 
       const companies =
@@ -79,8 +79,8 @@ const VacancyPage = () => {
 
   const fetchJobs = async (companyIds) => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/jobs/companies",
+      const response = await instance.get(
+        "/jobs/companies",
         {
           params: { companyIds: companyIds.join(",") },
         }
@@ -100,13 +100,13 @@ const VacancyPage = () => {
   const handleSubmit = async () => {
     try {
       if (editingJobId) {
-        await axios.put(
-          `http://localhost:8080/api/jobs/update/${editingJobId}`,
+        await instance.put(
+          `/jobs/update/${editingJobId}`,
           jobData
         );
         alert("Job Updated Successfully!");
       } else {
-        await axios.post("http://localhost:8080/api/jobs/create", jobData);
+        await instance.post("/jobs/create", jobData);
         alert("Job Created Successfully!");
       }
 
@@ -140,7 +140,7 @@ const VacancyPage = () => {
 
   const handleDelete = async (jobId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/jobs/delete/${jobId}`);
+      await instance.delete(`/jobs/delete/${jobId}`);
       alert("Job Deleted Successfully!");
       fetchCompanies();
     } catch (error) {

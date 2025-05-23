@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import instance from "../../service/AxiosOrder";
 import {
   Container,
   Paper,
@@ -38,12 +39,12 @@ function AppliedJobsPage() {
 
   const fetchAppliedJobs = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/applications/user/${user.id}`);
+      const response = await instance.get(`/applications/user/${user.id}`);
       setAppliedJobs(response.data.data);
 
       // Fetch job titles for each job
       const jobTitlePromises = response.data.data.map(async (job) => {
-        const jobResponse = await axios.get(`http://localhost:8080/api/jobs/${job.jobId}`);
+        const jobResponse = await instance .get(`/jobs/${job.jobId}`);
         return { jobId: job.jobId, title: jobResponse.data.data.title };
       });
 
@@ -63,7 +64,7 @@ function AppliedJobsPage() {
 
   const handleViewJob = async (jobId) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/jobs/${jobId}`);
+      const response = await instance.get(`/jobs/${jobId}`);
       setSelectedJob(response.data.data);
       setOpenModal(true);
     } catch (error) {
@@ -78,7 +79,7 @@ function AppliedJobsPage() {
 
   const handleDeleteJob = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/applications/${deleteJobId}`);
+      await instance.delete(`/applications/${deleteJobId}`);
       setAppliedJobs(appliedJobs.filter(job => job.applicationId !== deleteJobId));
     } catch (error) {
       console.error('Error deleting job application', error);

@@ -15,6 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import Navbar from "../../component/NavBar/Navbar";
+import instance from "../../service/AxiosOrder";
 
 const RegisteredStudents = () => {
   const { user } = useAuth();
@@ -37,7 +38,7 @@ const RegisteredStudents = () => {
         setError(null);
 
         // Fetch courses for the logged-in user
-        const coursesRes = await axios.get(`http://localhost:8080/api/courses/published-by/${user.id}`);
+        const coursesRes = await instance.get(`/courses/published-by/${user.id}`);
         const fetchedCourses = coursesRes.data.data;
         setCourses(fetchedCourses);
 
@@ -48,8 +49,8 @@ const RegisteredStudents = () => {
           fetchedCourses.map(async (course) => {
             try {
               // Fetch user IDs enrolled in this course
-              const userIdsRes = await axios.get(
-                `http://localhost:8080/api/enroll/course/${course.id}/users`
+              const userIdsRes = await instance.get(
+                `/enroll/course/${course.id}/users`
               );
               const userIds = userIdsRes.data.data;
 
@@ -57,8 +58,8 @@ const RegisteredStudents = () => {
               const userDetails = await Promise.all(
                 userIds.map(async (userId) => {
                   try {
-                    const userRes = await axios.get(
-                      `http://localhost:8080/api/auth/user/${userId}`
+                    const userRes = await instance.get(
+                      `/auth/user/${userId}`
                     );
                     console.log("User Details:", userRes.data);
                     return userRes.data; // UserDTO with name and email

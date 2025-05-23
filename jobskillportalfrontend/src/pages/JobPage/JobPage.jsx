@@ -5,6 +5,7 @@ import Navbar from "../../component/NavBar/Navbar";
 import { Grid, Typography, TextField, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import CustomPagination from "../../component/Pagination/CustomPagination";
 import SuggetionCarousel from "../../component/SuggetionCarousel/SuggetionCarousel";
+import instance from "../../service/AxiosOrder";
 
 const JobPage = () => {
   const jobsPerPage = 12;
@@ -26,7 +27,7 @@ const JobPage = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/jobs/all", {
+        const response = await instance.get("/jobs/all", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("iap-final-token"),
           },

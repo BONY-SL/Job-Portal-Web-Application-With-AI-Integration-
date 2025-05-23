@@ -15,6 +15,7 @@ import {
 import Navbar from "../../component/NavBar/Navbar";
 import { Visibility } from '@mui/icons-material';
 import AddIcon from "@mui/icons-material/Add";
+import instance from "../../service/AxiosOrder";
 
 const CompanyPage = () => {
   const { user } = useAuth();
@@ -30,7 +31,7 @@ const CompanyPage = () => {
 
   const fetchCompanies = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/companies/user/${user.id}`);
+      const response = await instance.get(`/companies/user/${user.id}`);
       setCompanies(response.data.data);
     } catch (error) {
       console.error("Error fetching companies:", error);
@@ -40,7 +41,7 @@ const CompanyPage = () => {
   const handleCreateCompany = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/companies", { ...newCompany, userId: user.id });
+      await instance.post("/companies", { ...newCompany, userId: user.id });
       fetchCompanies();
       setNewCompany({ name: "", location: "" });
       setOpenCreateModal(false);
@@ -52,7 +53,7 @@ const CompanyPage = () => {
   const handleUpdateCompany = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:8080/companies/${updateCompanyData.id}`, { ...updateCompanyData, userId: user.id });
+      await instance.put(`/companies/${updateCompanyData.id}`, { ...updateCompanyData, userId: user.id });
       fetchCompanies();
       setOpenUpdateModal(false);
       setUpdateCompanyData({ id: "", name: "", location: "" });
@@ -63,7 +64,7 @@ const CompanyPage = () => {
 
   const handleDeleteCompany = async (companyId) => {
     try {
-      await axios.delete(`http://localhost:8080/companies/${companyId}`);
+      await instance.delete(`/companies/${companyId}`);
       fetchCompanies();
     } catch (error) {
       console.error("Error deleting company:", error);
