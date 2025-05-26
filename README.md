@@ -17,9 +17,8 @@ This Job Portal Web Application aims to connect job seekers and employers throug
 - Post and manage job openings
 - View and shortlist job applications
 
-### 🛠️ Admin Panel
-- Manage users, jobs, and platform content
-- View system analytics and performance metrics
+### 🛠️ Tranieer
+- Create and manage Coursues, Modules , Lessons
 
 ---
 
@@ -72,4 +71,13 @@ This Job Portal Web Application aims to connect job seekers and employers throug
 - **Web Server**: Nginx
 
 ---
+
+![Screenshot 2025-05-26 085856](https://github.com/user-attachments/assets/92dfc936-018d-4c96-8b0c-74bd39c1adf5)
+![Screenshot 2025-05-26 085948](https://github.com/user-attachments/assets/cb8a8626-a094-4d68-8b6c-a9d5dfd54f6f)
+![Screenshot 2025-05-26 090021](https://github.com/user-attachments/assets/6ca2b9ec-c3d8-4989-8ef5-0b4511857f8c)
+![Screenshot 2025-05-26 090637](https://github.com/user-attachments/assets/51490728-b675-4507-96d0-fc5e784aa096)
+![Screenshot 2025-05-26 090755](https://github.com/user-attachments/assets/efb7219f-b445-4a8c-8d00-30815f8b8170)
+![Screenshot 2025-05-26 091513](https://github.com/user-attachments/assets/bc379432-c2a6-4697-afd2-f76396bf409d)
+![Screenshot 2025-05-26 091556](https://github.com/user-attachments/assets/10b53b2c-4609-4912-8491-3f434bc1e36a)
+
 
