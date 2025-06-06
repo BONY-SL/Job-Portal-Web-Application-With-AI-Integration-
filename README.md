@@ -51,12 +51,12 @@ This Job Portal Web Application aims to connect job seekers and employers throug
 
 ### 📄 Resume Parsing
 - Extract skills, education, and experience from uploaded resumes
-- Technologies: IBM Watson
+- Technologies: Open API
 - Automatically suggest relevant jobs based on parsed data
 
 ### 💬 Chatbot (FAQs)
 - AI-powered chatbot for common job seeker and employer queries
-- Technologies: Botpress
+- Technologies: Google Dialog Flow
 - Helps users navigate the platform and understand job listings
 
 ---
