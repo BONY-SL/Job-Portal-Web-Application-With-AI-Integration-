@@ -82,7 +82,7 @@ const VacancyPage = () => {
       const response = await instance.get(
         "/jobs/companies",
         {
-          params: { companyIds: companyIds.join(",") },
+          params: {ids: companyIds.join(",") },
         }
       );
       setJobs(response.data.data);
